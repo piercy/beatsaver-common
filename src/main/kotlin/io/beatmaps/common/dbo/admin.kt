@@ -8,6 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 import org.jetbrains.exposed.sql.insert
 import java.lang.RuntimeException
+import kotlin.reflect.KClass
 
 object ModLog: IntIdTable("modlog", "logId") {
     val opBy = reference("userId", User)
@@ -16,10 +17,8 @@ object ModLog: IntIdTable("modlog", "logId") {
     val type = integer("type")
     val action = text("action")
 
-    fun insert(userId: Int, mapId: Int, t: ModLogOpType, a: Any) =
-        if (a.javaClass != t.actionClass) {
-            throw RuntimeException("Action is invalid for log type")
-        } else {
+    fun insert(userId: Int, mapId: Int, a: IModLogOpAction) =
+        (ModLogOpType.fromAction(a) ?: throw RuntimeException("Action type not valid")).let { t ->
             insert {
                 it[opBy] = userId
                 it[opOn] = mapId
@@ -37,12 +36,18 @@ data class ModLogDao(val key: EntityID<Int>): IntEntity(key) {
     val type by ModLog.type
     private val action by ModLog.action
 
-    val realAction = jackson.readValue(action, ModLogOpType.values()[type].actionClass)
+    val realAction: IModLogOpAction = jackson.readValue(action, ModLogOpType.values()[type].actionClass.java) as IModLogOpAction
 }
 
-enum class ModLogOpType(val actionClass: Class<*>) {
-    InfoEdit(InfoEditData::class.java), Delete(EmptyData::class.java)
+enum class ModLogOpType(val actionClass: KClass<*>) {
+    InfoEdit(InfoEditData::class), Delete(DeletedData::class);
+
+    companion object {
+        private val map = values().associateBy(ModLogOpType::actionClass)
+        fun fromAction(action: IModLogOpAction) = map[action::class]
+    }
 }
 
-data class InfoEditData(val oldTitle: String, val oldDescription: String, val newTitle: String, val newDescription: String)
-class EmptyData
+interface IModLogOpAction
+data class InfoEditData(val oldTitle: String, val oldDescription: String, val newTitle: String, val newDescription: String) : IModLogOpAction
+class DeletedData : IModLogOpAction
