@@ -56,6 +56,7 @@ object Beatmap: IntIdTable("beatmap", "mapId") {
     val ranked = bool("ranked")
     val minNps = decimal("minNps", 8, 3)
     val maxNps = decimal("maxNps", 8, 3)
+    val fullSpread = bool("fullSpread")
 }
 
 data class BeatmapDao(val key: EntityID<Int>): IntEntity(key) {
