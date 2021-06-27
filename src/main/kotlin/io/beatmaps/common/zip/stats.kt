@@ -60,6 +60,11 @@ fun ZipHelper.parseDifficulty(hash: String, diff: DifficultyBeatmap, char: Diffi
         it[chroma] = chromaLocal
         it[ne] = noodleLocal
         it[me] = diff._customData?._requirements?.contains("Mapping Extensions") ?: false
+
+        it[requirements] = diff._customData?._requirements?.toTypedArray()
+        it[suggestions] = diff._customData?._suggestions?.toTypedArray()
+        it[information] = diff._customData?._information?.toTypedArray()
+        it[warnings] = diff._customData?._warnings?.toTypedArray()
     }
 
     return DiffStats(chromaLocal, noodleLocal, npsLocal)

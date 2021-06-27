@@ -3,6 +3,7 @@ package io.beatmaps.common.dbo
 import io.beatmaps.common.api.ECharacteristic
 import io.beatmaps.common.api.EDifficulty
 import io.beatmaps.common.api.EMapState
+import io.beatmaps.common.db.array
 import io.beatmaps.common.db.postgresEnumeration
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -36,6 +37,7 @@ object Beatmap: IntIdTable("beatmap", "mapId") {
     val levelAuthorName = text("levelAuthorName")
     val uploaded = timestamp("uploaded").nullable()
     val automapper = bool("automapper")
+    val ai = bool("ai")
     val plays = integer("plays")
     val downloads = integer("downloads")
     val deletedAt = timestamp("deletedAt").nullable()
@@ -54,6 +56,10 @@ object Beatmap: IntIdTable("beatmap", "mapId") {
     val chroma = bool("chroma")
     val noodle = bool("noodle")
     val ranked = bool("ranked")
+    val qualified = bool("qualified")
+    val rankedAt = timestamp("rankedAt").nullable()
+    val qualifiedAt = timestamp("qualifiedAt").nullable()
+
     val minNps = decimal("minNps", 8, 3)
     val maxNps = decimal("maxNps", 8, 3)
     val fullSpread = bool("fullSpread")
@@ -192,6 +198,10 @@ object Difficulty: IntIdTable("difficulty", "difficultyId") {
     val pError = integer("pError")
     val createdAt = timestamp("createdAt")
     val stars = decimal("stars", 4, 2).nullable()
+    val requirements = array<String>("requirements", VarCharColumnType(64)).nullable()
+    val suggestions = array<String>("suggestions", VarCharColumnType(64)).nullable()
+    val information = array<String>("information", VarCharColumnType(255)).nullable()
+    val warnings = array<String>("warnings", VarCharColumnType(255)).nullable()
 
     val uniqueDiff = Index(listOf(versionId, characteristic, difficulty), true, "diff_unique")
 }
@@ -219,4 +229,8 @@ data class DifficultyDao(val key: EntityID<Int>): IntEntity(key) {
     val pError: Int by Difficulty.pError
     val createdAt: Instant by Difficulty.createdAt
     var stars: BigDecimal? by Difficulty.stars
+    val requirements by Difficulty.requirements
+    val suggestions by Difficulty.suggestions
+    val information by Difficulty.information
+    val warnings by Difficulty.warnings
 }
