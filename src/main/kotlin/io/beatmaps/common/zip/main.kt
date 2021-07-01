@@ -117,7 +117,7 @@ class ZipHelper(private val fs: FileSystem, val filesOriginalCase: Set<String>, 
                 val files = lists.flatMap { it.second }.map { it.toString() }
                 val directories = lists.flatMap { it.first }.map { it.toString() }
 
-                ZipHelper(fs, files.toSet(), files.map { it.toLowerCase() }.toSet(), directories.toSet()).use(block)
+                ZipHelper(fs, files.toSet(), files.map { it.lowercase() }.toSet(), directories.toSet()).use(block)
             }
     }
 }

@@ -55,6 +55,8 @@ object Beatmap: IntIdTable("beatmap", "mapId") {
 
     val chroma = bool("chroma")
     val noodle = bool("noodle")
+    val me = bool("me")
+    val cinema = bool("cinema")
     val ranked = bool("ranked")
     val qualified = bool("qualified")
     val rankedAt = timestamp("rankedAt").nullable()
@@ -193,6 +195,7 @@ object Difficulty: IntIdTable("difficulty", "difficultyId") {
     val chroma = bool("chroma")
     val ne = bool("ne")
     val me = bool("me")
+    val cinema = bool("cinema")
     val pReset = integer("pReset")
     val pWarn = integer("pWarn")
     val pError = integer("pError")
@@ -224,6 +227,7 @@ data class DifficultyDao(val key: EntityID<Int>): IntEntity(key) {
     val chroma: Boolean by Difficulty.chroma
     val ne: Boolean by Difficulty.ne
     val me: Boolean by Difficulty.me
+    val cinema: Boolean by Difficulty.cinema
     val pReset: Int by Difficulty.pReset
     val pWarn: Int by Difficulty.pWarn
     val pError: Int by Difficulty.pError

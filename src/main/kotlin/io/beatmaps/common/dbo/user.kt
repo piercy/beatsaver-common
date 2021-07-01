@@ -17,6 +17,7 @@ object User: IntIdTable("uploader", "id") {
     val discordId = long("discordId").nullable()
     val testplay = bool("testplay")
     val admin = bool("admin")
+    val uploadLimit = integer("uploadLimit")
 }
 
 data class UserDao(val key: EntityID<Int>): IntEntity(key) {
@@ -30,4 +31,5 @@ data class UserDao(val key: EntityID<Int>): IntEntity(key) {
     val discordId: Long? by User.discordId
     val testplay: Boolean by User.testplay
     val admin: Boolean by User.admin
+    val uploadLimit: Int by User.uploadLimit
 }

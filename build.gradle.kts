@@ -12,8 +12,6 @@ version = "1.0-SNAPSHOT"
 kotlin {
     sourceSets.all {
         languageSettings.useExperimentalAnnotation("kotlin.io.path.ExperimentalPathApi")
-        languageSettings.useExperimentalAnnotation("io.ktor.locations.KtorExperimentalLocationsAPI")
-        languageSettings.useExperimentalAnnotation("kotlinx.coroutines.flow.FlowPreview")
         languageSettings.useExperimentalAnnotation("kotlin.time.ExperimentalTime")
         languageSettings.useExperimentalAnnotation("io.ktor.util.KtorExperimentalAPI")
         languageSettings.useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")

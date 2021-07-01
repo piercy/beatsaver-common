@@ -77,7 +77,7 @@ data class MapInfo(
                         .toOutputStream(newImageStream)
                     info.thumbnail = newImageStream
 
-                    ImageInfo(format.toLowerCase(), image.width, image.height)
+                    ImageInfo(format.lowercase(), image.width, image.height)
                 } else {
                     null
                 }
@@ -111,10 +111,10 @@ data class MapInfo(
         validate(MapInfo::_beatsPerMinute).isNotNull().isBetween(10f, 1000f)
         validate(MapInfo::_previewStartTime).isPositiveOrZero()
         validate(MapInfo::_previewDuration).isPositiveOrZero()
-        validate(MapInfo::_songFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.toLowerCase()) }
+        validate(MapInfo::_songFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.lowercase()) }
             .validate(AudioFormat) { it == null || audioValid(audio, info) }
         val imageInfo = imageInfo(getFile(_coverImageFilename), info)
-        validate(MapInfo::_coverImageFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.toLowerCase()) }
+        validate(MapInfo::_coverImageFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.lowercase()) }
             .validate(ImageFormat) { imageInfo != null && arrayOf("jpeg", "jpg", "png").contains(imageInfo.format) }
             .validate(ImageSquare) { imageInfo == null || imageInfo.width == imageInfo.height }
             .validate(ImageSize) { imageInfo == null || imageInfo.width >= 256 && imageInfo.height >= 256 }
@@ -246,11 +246,11 @@ data class DifficultyBeatmap(
 
         val allowedDiffNames = setOf("Easy", "Normal", "Hard", "Expert", "ExpertPlus")
         validate(DifficultyBeatmap::_difficulty).isNotNull()
-            .validate(In(allowedDiffNames)) { it == null || allowedDiffNames.contains(it.capitalize()) }
+            .validate(In(allowedDiffNames)) { it == null || allowedDiffNames.any { dn -> dn.equals(it, true) } }
         validate(DifficultyBeatmap::_difficultyRank).isNotNull().isIn(1, 3, 5, 7, 9)
-        validate(DifficultyBeatmap::_beatmapFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.toLowerCase()) }
+        validate(DifficultyBeatmap::_beatmapFilename).isNotNull().validate(InFiles) { it == null || files.contains(it.lowercase()) }
             .also {
-                if (files.contains(_beatmapFilename.toLowerCase())) {
+                if (files.contains(_beatmapFilename.lowercase())) {
                     diffValid(it, getFile(_beatmapFilename), characteristic, self(), info)
                 }
             }
@@ -289,7 +289,7 @@ fun Validator<BSDifficulty>.validate(info: ExtractedInfo) {
     }
     validate(BSDifficulty::_obstacles).isNotNull().validateForEach {
         validate(BSObstacle::_type).isIn(0, 1)
-        validate(BSObstacle::_duration).validate(NotNull) { it != Int.MIN_VALUE }
+        validate(BSObstacle::_duration).validate(NotNull) { it != Long.MIN_VALUE }
         validate(BSObstacle::_time).validate(NotNull) { it != Float.NEGATIVE_INFINITY }
         validate(BSObstacle::_lineIndex).validate(NotNull) { it != Int.MIN_VALUE }
         validate(BSObstacle::_width).validate(NotNull) { it != Int.MIN_VALUE }
