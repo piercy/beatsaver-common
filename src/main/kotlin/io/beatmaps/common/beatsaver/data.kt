@@ -5,6 +5,7 @@ import java.time.Instant
 
 fun localFolder(hash: String) = File(System.getenv("ZIP_DIR") ?: "K:\\BeatSaver", hash.substring(0, 1))
 fun localCoverFolder(hash: String) = File(System.getenv("COVER_DIR") ?: "K:\\BeatSaverCover", hash.substring(0, 1))
+fun localAudioFolder(hash: String) = File(System.getenv("AUDIO_DIR") ?: "K:\\BeatSaverAudio", hash.substring(0, 1))
 
 data class BeatsaverList(val docs: List<BeatsaverMap>, val totalDocs: Int, val lastPage: Int, val prevPage: Int, val nextPage: Int)
 data class BeatsaverMap(val metadata: BeatsaverMetadata, val stats: BeatsaverStats, val description: String, val deletedAt: Instant?, val _id: String, val key: String, val name: String,

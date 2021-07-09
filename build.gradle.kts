@@ -26,6 +26,15 @@ dependencies {
         maven { url = uri("https://dl.bintray.com/kotlin/kotlinx") }
         maven { url = uri("https://dl.bintray.com/kotlin/ktor") }
         maven { url = uri("https://jitpack.io") }
+        ivy {
+            url = uri("https://github.com")
+
+            patternLayout {
+                artifact("/[organisation]/releases/download/v[revision]/[module]-[revision].[ext]")
+            }
+
+            metadataSources { artifact() }
+        }
     }
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
@@ -53,6 +62,7 @@ dependencies {
     implementation("net.coobird:thumbnailator:0.4.13")
     implementation("com.twelvemonkeys.imageio:imageio-jpeg:3.6.1")
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
+    implementation("nwaldispuehl/java-lame:net.sourceforge.lame:3.98.4@jar")
 
     implementation("org.valiktor:valiktor-core:0.12.0")
 
