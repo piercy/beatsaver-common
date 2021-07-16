@@ -41,6 +41,9 @@ fun RabbitMQConfiguration.setupAMQP() = apply {
         queueDeclare("vote", true, false, false, queueConfig)
         queueBind("vote", "beatmaps", "vote.#")
 
+        queueDeclare("uvstats", true, false, false, queueConfig)
+        queueBind("uvstats", "beatmaps", "user.stats.*")
+
         queueDeclare("bs.update", true, false, false, queueConfig)
         queueBind("bs.update", "beatmaps", "beatsaver.update")
 

@@ -3,6 +3,7 @@ package io.beatmaps.common.db
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.Function
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import java.time.Instant
 
 fun incrementBy(column: Column<Int>, num: Int = 1) = object: Expression<Int>() {
     override fun toQueryBuilder(queryBuilder: QueryBuilder) {
@@ -52,5 +53,33 @@ fun <T:Any> wrapAsExpressionNotNull(query: Query) = object : Expression<T>() {
         append("(")
         query.prepareSQL(this)
         append(")")
+    }
+}
+
+fun countWithFilter(condition: Expression<Boolean>) : Expression<Int> = object : Function<Int>(IntegerColumnType()) {
+    override fun toQueryBuilder(queryBuilder: QueryBuilder)= queryBuilder {
+        +"COUNT(*) FILTER (WHERE "
+        +condition
+        +")"
+    }
+}
+
+fun <T> Expression<T>.countWithFilter(condition: Expression<Boolean>) : Expression<Int> = object : Function<Int>(IntegerColumnType()) {
+    override fun toQueryBuilder(queryBuilder: QueryBuilder)= queryBuilder {
+        +"COUNT("
+        +this@countWithFilter
+        +") FILTER (WHERE "
+        +condition
+        +")"
+    }
+}
+
+operator fun Expression<*>.minus(other: Expression<Instant?>) = object : Function<Int>(IntegerColumnType()) {
+    override fun toQueryBuilder(queryBuilder: QueryBuilder)= queryBuilder {
+        +"DATE_PART('days', "
+        +this@minus
+        +" - "
+        +other
+        +")"
     }
 }
