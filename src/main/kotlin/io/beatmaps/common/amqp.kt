@@ -4,6 +4,7 @@ import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.CancelCallback
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.DeliverCallback
+import io.ktor.application.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -20,7 +21,7 @@ import kotlin.reflect.KClass
 val es: ExecutorService = Executors.newFixedThreadPool(4)
 
 val hostname: String = System.getenv("HOSTNAME") ?: ""
-val rabbitHost: String = System.getenv("RABBITMQ_HOST") ?: "localhost"
+val rabbitHost: String = System.getenv("RABBITMQ_HOST") ?: ""
 val rabbitPort: String = System.getenv("RABBITMQ_PORT") ?: "5672"
 val rabbitUser: String = System.getenv("RABBITMQ_USER") ?: "guest"
 val rabbitPass: String = System.getenv("RABBITMQ_PASS") ?: "guest"
@@ -55,6 +56,12 @@ fun RabbitMQConfiguration.setupAMQP() = apply {
 
         queueDeclare("bm.updateStream", true, false, false, queueConfig)
         queueBind("bm.updateStream", "beatmaps", "maps.*.updated")
+    }
+}
+
+fun Application.rabbitOptional(configuration: RabbitMQ.() -> Unit) {
+    if (rabbitHost.isNotEmpty()) {
+        feature(RabbitMQ).apply(configuration)
     }
 }
 

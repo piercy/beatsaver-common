@@ -83,7 +83,7 @@ class UpdateReturningStatement(private val table: Table, private val returningCo
             if (hasNext == null) hasNext()
             if (hasNext == false) throw NoSuchElementException()
             hasNext = null
-            return ResultRow.create(rs, returningColumns.toList())
+            return ResultRow.create(rs, returningColumns.mapIndexed { index, column -> column to index }.toMap())
         }
 
         override fun hasNext(): Boolean {
