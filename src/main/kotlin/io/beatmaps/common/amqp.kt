@@ -25,6 +25,7 @@ val rabbitHost: String = System.getenv("RABBITMQ_HOST") ?: ""
 val rabbitPort: String = System.getenv("RABBITMQ_PORT") ?: "5672"
 val rabbitUser: String = System.getenv("RABBITMQ_USER") ?: "guest"
 val rabbitPass: String = System.getenv("RABBITMQ_PASS") ?: "guest"
+private val rabbitLogger = Logger.getLogger("bmio.RabbitMQ")
 
 fun RabbitMQConfiguration.setupAMQP() = apply {
     uri = "amqp://$rabbitUser:$rabbitPass@$rabbitHost:$rabbitPort"
@@ -62,6 +63,8 @@ fun RabbitMQConfiguration.setupAMQP() = apply {
 fun Application.rabbitOptional(configuration: RabbitMQ.() -> Unit) {
     if (rabbitHost.isNotEmpty()) {
         feature(RabbitMQ).apply(configuration)
+    } else {
+        rabbitLogger.warning("RabbitMQ not set up")
     }
 }
 
@@ -76,7 +79,7 @@ fun <T : Any> RabbitMQ.consumeAck(
     clazz: KClass<T>,
     rabbitDeliverCallback: suspend (consumerTag: String, body: T) -> Unit
 ) {
-    val logger = Logger.getLogger("RabbitMQ.consumeAck")
+    val logger = Logger.getLogger("bmio.RabbitMQ.consumeAck")
     GlobalScope.launch(Dispatchers.IO) {
         getConnection().createChannel().apply {
             basicConsume(
