@@ -94,6 +94,9 @@ data class BeatmapDao(val key: EntityID<Int>): IntEntity(key) {
     val upVotesInt by Beatmap.upVotesInt
     val downVotesInt by Beatmap.downVotesInt
 
+    val ranked by Beatmap.ranked
+    val qualified by Beatmap.qualified
+
     fun enrichTestplays() = this.also {
         val v = versions.filter { it.value.state != EMapState.Published }
         if (v.isNotEmpty()) {
