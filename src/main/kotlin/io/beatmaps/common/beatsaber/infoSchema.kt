@@ -259,9 +259,21 @@ data class DifficultyBeatmap(
     fun enumValue() = EDifficulty.fromInt(_difficultyRank) ?: searchEnum(_difficulty)
 }
 
-fun extraFieldsViolation(constraintViolations: MutableSet<ConstraintViolation>, keys: Set<String>, notAllowed: Array<String> =
-    arrayOf("_warnings", "_information", "_suggestions", "_requirements", "_difficultyLabel", "_envColorLeft", "_envColorRight", "_colorLeft", "_colorRight")) {
-
+fun extraFieldsViolation(
+    constraintViolations: MutableSet<ConstraintViolation>,
+    keys: Set<String>,
+    notAllowed: Array<String> = arrayOf(
+        "_warnings",
+        "_information",
+        "_suggestions",
+        "_requirements",
+        "_difficultyLabel",
+        "_envColorLeft",
+        "_envColorRight",
+        "_colorLeft",
+        "_colorRight"
+    )
+) {
     constraintViolations +=
         notAllowed.intersect(keys).map {
             DefaultConstraintViolation(

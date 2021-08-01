@@ -1,16 +1,15 @@
 package io.beatmaps.common.zip
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.beatmaps.common.beatsaber.BSDifficulty
 import io.beatmaps.common.beatsaber.DifficultyBeatmap
 import io.beatmaps.common.beatsaber.DifficultyBeatmapSet
 import io.beatmaps.common.beatsaber.MapInfo
-import io.beatmaps.common.beatsaber.BSDifficulty
 import io.beatmaps.common.copyTo
 import io.beatmaps.common.jackson
 import net.sourceforge.lame.lowlevel.LameEncoder
 import net.sourceforge.lame.mp3.Lame
 import net.sourceforge.lame.mp3.MPEGMode
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.FileSystem
@@ -18,7 +17,7 @@ import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.DigestOutputStream
-import java.util.*
+import java.util.ServiceLoader
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
@@ -42,8 +41,16 @@ val KProperty0<*>.isLazyInitialized: Boolean
         return isLazyInitialized
     }
 
-data class ExtractedInfo(val allowedFiles: List<String>, val md: DigestOutputStream, var mapInfo: MapInfo, val score: Short, val diffs: MutableMap<DifficultyBeatmapSet,
-        MutableMap<DifficultyBeatmap, BSDifficulty>> = mutableMapOf(), var duration: Float = 0f, var thumbnail: ByteArrayOutputStream? = null, var preview: ByteArrayOutputStream? = null)
+data class ExtractedInfo(
+    val allowedFiles: List<String>,
+    val md: DigestOutputStream,
+    var mapInfo: MapInfo,
+    val score: Short,
+    val diffs: MutableMap<DifficultyBeatmapSet, MutableMap<DifficultyBeatmap, BSDifficulty>> = mutableMapOf(),
+    var duration: Float = 0f,
+    var thumbnail: ByteArrayOutputStream? = null,
+    var preview: ByteArrayOutputStream? = null
+)
 
 interface IMapScorer {
     fun scoreMap(infoFile: MapInfo, audio: File, block: (String) -> BSDifficulty): Short

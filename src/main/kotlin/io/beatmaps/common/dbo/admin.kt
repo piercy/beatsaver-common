@@ -7,11 +7,11 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.`java-time`.timestamp
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.`java-time`.timestamp
 import java.lang.RuntimeException
 
-object ModLog: IntIdTable("modlog", "logId") {
+object ModLog : IntIdTable("modlog", "logId") {
     val opBy = reference("userId", User)
     val opOn = reference("mapId", Beatmap)
     val opAt = timestamp("when")
@@ -29,8 +29,9 @@ object ModLog: IntIdTable("modlog", "logId") {
         }
 }
 
-data class ModLogDao(val key: EntityID<Int>): IntEntity(key) {
+data class ModLogDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<ModLogDao>(ModLog)
+
     val opBy by ModLog.opBy
     val opOn by ModLog.opOn
     val opAt by ModLog.opAt

@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 import java.time.Instant
 
-object Testplay: IntIdTable("testplay", "testplayId") {
+object Testplay : IntIdTable("testplay", "testplayId") {
     val versionId = reference("versionId", Versions)
     val userId = reference("userId", User)
 
@@ -21,7 +21,7 @@ object Testplay: IntIdTable("testplay", "testplayId") {
     fun joinUploader() = join(User, JoinType.INNER, onColumn = Testplay.userId, otherColumn = User.id)
 }
 
-data class TestplayDao(val key: EntityID<Int>): IntEntity(key) {
+data class TestplayDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<TestplayDao>(Testplay)
     val versionId: EntityID<Int> by Testplay.versionId
     val version: VersionsDao by VersionsDao referencedOn Testplay.versionId

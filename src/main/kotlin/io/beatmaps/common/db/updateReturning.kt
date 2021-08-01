@@ -20,8 +20,12 @@ import java.sql.ResultSet
 import java.util.LinkedHashMap
 import java.util.NoSuchElementException
 
-class UpdateReturningStatement(private val table: Table, private val returningColumns: Array<out Column<*>>, private val limit: Int? = null,
-                                          private val where: Op<Boolean>? = null) : Statement<List<ResultRow>>(StatementType.SELECT, listOf(table)) {
+class UpdateReturningStatement(
+    private val table: Table,
+    private val returningColumns: Array<out Column<*>>,
+    private val limit: Int? = null,
+    private val where: Op<Boolean>? = null
+) : Statement<List<ResultRow>>(StatementType.SELECT, listOf(table)) {
 
     private val values: MutableMap<Column<*>, Any?> = LinkedHashMap()
 
@@ -34,18 +38,18 @@ class UpdateReturningStatement(private val table: Table, private val returningCo
     }
 
     @JvmName("setWithEntityIdExpression")
-    operator fun <S, ID: EntityID<S>, E: Expression<S>> set(column: Column<ID>, value: E) {
+    operator fun <S, ID : EntityID<S>, E : Expression<S>> set(column: Column<ID>, value: E) {
         require(!values.containsKey(column)) { "$column is already initialized" }
         values[column] = value
     }
 
     @JvmName("setWithEntityIdValue")
-    operator fun <S:Comparable<S>, ID: EntityID<S>, E: S?> set(column: Column<ID>, value: E) {
+    operator fun <S : Comparable<S>, ID : EntityID<S>, E : S?> set(column: Column<ID>, value: E) {
         require(!values.containsKey(column)) { "$column is already initialized" }
         values[column] = value
     }
 
-    operator fun <T, S:T, E:Expression<S>> set(column: Column<T>, value: E) {
+    operator fun <T, S : T, E : Expression<S>> set(column: Column<T>, value: E) {
         require(!values.containsKey(column)) { "$column is already initialized" }
         values[column] = value
     }
@@ -76,7 +80,7 @@ class UpdateReturningStatement(private val table: Table, private val returningCo
         return ResultIterator(executeQuery()).asSequence().toList()
     }
 
-    inner class ResultIterator(private val rs: ResultSet): Iterator<ResultRow> {
+    inner class ResultIterator(private val rs: ResultSet) : Iterator<ResultRow> {
         private var hasNext: Boolean? = null
 
         override operator fun next(): ResultRow {
@@ -94,8 +98,8 @@ class UpdateReturningStatement(private val table: Table, private val returningCo
     }
 }
 
-inline fun <T : IdTable<Key>, Key:Comparable<Key>> T.updateReturning(
-    where: SqlExpressionBuilder.()->Op<Boolean>,
+inline fun <T : IdTable<Key>, Key : Comparable<Key>> T.updateReturning(
+    where: SqlExpressionBuilder.() -> Op<Boolean>,
     body: T.(UpdateReturningStatement) -> Unit,
     vararg returningColumns: Column<*>
 ) =

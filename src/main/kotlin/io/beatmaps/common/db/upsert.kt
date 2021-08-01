@@ -58,13 +58,11 @@ class UpsertStatement<Key : Any>(table: Table, conflictColumn: Column<*>? = null
             append(" ON DUPLICATE KEY UPDATE ")
             values.keys.filter { it !in indexColumns }
                 .joinTo(this) { "${transaction.identity(it)}=VALUES(${transaction.identity(it)})" }
-
         }
     }
-
 }
 
-inline fun <T : IdTable<Key>, Key:Comparable<Key>> T.upsert(
+inline fun <T : IdTable<Key>, Key : Comparable<Key>> T.upsert(
     conflictColumn: Column<*>? = null,
     conflictIndex: Index? = null,
     body: T.(UpsertStatement<Number>) -> Unit
@@ -75,7 +73,7 @@ inline fun <T : IdTable<Key>, Key:Comparable<Key>> T.upsert(
         get(id)
     }
 
-inline fun <T : IdTable<Key>, Key:Comparable<Key>> T.insertIgnoreReturning(
+inline fun <T : IdTable<Key>, Key : Comparable<Key>> T.insertIgnoreReturning(
     returning: Column<*>,
     conflictIndex: Index,
     body: T.(UpsertStatement<Number>) -> Unit

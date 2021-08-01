@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.alias
 
 val curatorAlias = User.alias("curator")
-object User: IntIdTable("uploader", "id") {
+object User : IntIdTable("uploader", "id") {
     val hash = char("hash", 24).uniqueIndex("hash").nullable()
     val name = text("name")
     val avatar = text("avatar").nullable()
@@ -21,7 +21,7 @@ object User: IntIdTable("uploader", "id") {
     val upvotes = integer("upvotes")
 }
 
-data class UserDao(val key: EntityID<Int>): IntEntity(key) {
+data class UserDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<UserDao>(User)
     val name: String by User.name
     val hash: String? by User.hash

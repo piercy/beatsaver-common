@@ -6,13 +6,13 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 
-object Plays: IntIdTable("plays", "Id") {
+object Plays : IntIdTable("plays", "Id") {
     val mapId = reference("mapId", Beatmap)
     val userId = long("userId")
     val createdAt = timestamp("createdAt")
 }
 
-object Votes: IntIdTable("vote", "Id") {
+object Votes : IntIdTable("vote", "Id") {
     val mapId = reference("mapId", Beatmap)
     val userId = long("userId")
     val vote = bool("vote")
@@ -21,18 +21,18 @@ object Votes: IntIdTable("vote", "Id") {
     val steam = bool("steam")
 }
 
-data class VotesDao(val key: EntityID<Int>): IntEntity(key) {
+data class VotesDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<VotesDao>(Votes)
     val vote: Boolean by Votes.vote
 }
 
-object Downloads: IntIdTable("downloads", "downloadId") {
+object Downloads : IntIdTable("downloads", "downloadId") {
     val hash = char("hash", 40)
     val remote = varchar("remote", 15)
     val processed = bool("processed")
 }
 
-data class DownloadsDao(val key: EntityID<Int>): IntEntity(key) {
+data class DownloadsDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<DownloadsDao>(Downloads)
     val hash: String by Downloads.hash
     val remote: String by Downloads.remote

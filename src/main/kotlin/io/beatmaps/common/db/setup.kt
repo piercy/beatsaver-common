@@ -18,10 +18,12 @@ fun setupDB() {
 inline fun <reified T : Enum<T>> Table.postgresEnumeration(
     columnName: String,
     postgresEnumName: String
-) = customEnumeration(columnName, postgresEnumName,
-    { value -> searchEnum<T>(value as String) }, { PGEnum(postgresEnumName, it) })
+) = customEnumeration(
+    columnName, postgresEnumName,
+    { value -> searchEnum<T>(value as String) }, { PGEnum(postgresEnumName, it) }
+)
 
-class PGEnum<T:Enum<T>>(enumTypeName: String, enumValue: T?) : PGobject() {
+class PGEnum<T : Enum<T>>(enumTypeName: String, enumValue: T?) : PGobject() {
     init {
         value = enumValue?.name?.removePrefix("_")
         type = enumTypeName

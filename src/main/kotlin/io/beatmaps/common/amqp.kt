@@ -4,7 +4,8 @@ import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.CancelCallback
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.DeliverCallback
-import io.ktor.application.*
+import io.ktor.application.Application
+import io.ktor.application.feature
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.asCoroutineDispatcher

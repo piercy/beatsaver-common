@@ -18,9 +18,11 @@ data class DiffStats(val chroma: Boolean, val noodle: Boolean, val me: Boolean, 
 fun Array<String>?.containsIgnoreCase(element: String) = this?.any { e -> e.equals(element, true) } ?: false
 
 fun ZipHelper.parseDifficulty(hash: String, diff: DifficultyBeatmap, char: DifficultyBeatmapSet, map: MapInfo, ver: VersionsDao? = null): DiffStats {
-    val version = ver ?: VersionsDao.wrapRow(Versions.select {
-        Versions.hash eq hash
-    }.first())
+    val version = ver ?: VersionsDao.wrapRow(
+        Versions.select {
+            Versions.hash eq hash
+        }.first()
+    )
 
     var stats = DiffStats(chroma = false, noodle = false, me = false, cinema = false, nps = BigDecimal.ZERO)
 

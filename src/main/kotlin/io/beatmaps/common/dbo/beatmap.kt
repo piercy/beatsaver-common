@@ -9,12 +9,20 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ColumnSet
+import org.jetbrains.exposed.sql.Index
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.Query
+import org.jetbrains.exposed.sql.QueryAlias
+import org.jetbrains.exposed.sql.SqlExpressionBuilder
+import org.jetbrains.exposed.sql.VarCharColumnType
 import org.jetbrains.exposed.sql.`java-time`.timestamp
+import org.jetbrains.exposed.sql.select
 import java.math.BigDecimal
 import java.time.Instant
 
-object Beatmap: IntIdTable("beatmap", "mapId") {
+object Beatmap : IntIdTable("beatmap", "mapId") {
     fun joinVersions(stats: Boolean = false, state: (SqlExpressionBuilder.() -> Op<Boolean>)? = { Versions.state eq EMapState.Published }) =
         join(Versions, JoinType.INNER, onColumn = Beatmap.id, otherColumn = Versions.mapId, additionalConstraint = state).run {
             if (stats) {
@@ -67,7 +75,7 @@ object Beatmap: IntIdTable("beatmap", "mapId") {
     val fullSpread = bool("fullSpread")
 }
 
-data class BeatmapDao(val key: EntityID<Int>): IntEntity(key) {
+data class BeatmapDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<BeatmapDao>(Beatmap)
     val name: String by Beatmap.name
     val description: String by Beatmap.description
@@ -153,7 +161,7 @@ fun Query.complexToBeatmap(alias: QueryAlias? = null) = this.fold(mutableMapOf<E
     }
 }.values.toList()
 
-object Versions: IntIdTable("versions", "versionId") {
+object Versions : IntIdTable("versions", "versionId") {
     val mapId = reference("mapId", Beatmap)
     val hash = char("hash", 40)
     val uploaded = timestamp("createdAt")
@@ -164,7 +172,7 @@ object Versions: IntIdTable("versions", "versionId") {
     val sageScore = short("sageScore").nullable()
 }
 
-data class VersionsDao(val key: EntityID<Int>): IntEntity(key) {
+data class VersionsDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<VersionsDao>(Versions)
     val mapId: EntityID<Int> by Versions.mapId
     val map: BeatmapDao by BeatmapDao referencedOn Versions.mapId
@@ -181,7 +189,7 @@ data class VersionsDao(val key: EntityID<Int>): IntEntity(key) {
 }
 
 val maxAllowedNps = BigDecimal.valueOf(99999L)
-object Difficulty: IntIdTable("difficulty", "difficultyId") {
+object Difficulty : IntIdTable("difficulty", "difficultyId") {
     val versionId = reference("versionId", Versions)
     val njs = float("njs")
     val offset = float("offsetTime")
@@ -212,7 +220,7 @@ object Difficulty: IntIdTable("difficulty", "difficultyId") {
     val uniqueDiff = Index(listOf(versionId, characteristic, difficulty), true, "diff_unique")
 }
 
-data class DifficultyDao(val key: EntityID<Int>): IntEntity(key) {
+data class DifficultyDao(val key: EntityID<Int>) : IntEntity(key) {
     companion object : IntEntityClass<DifficultyDao>(Difficulty)
     val version: VersionsDao by VersionsDao referencedOn Difficulty.versionId
     val njs: Float by Difficulty.njs

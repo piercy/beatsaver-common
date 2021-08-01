@@ -39,7 +39,6 @@ class KotlinTimeModule : SimpleModule() {
         addSerializer(Float::class.java, FloatSerializer.INSTANCE)
         addSerializer(HumanEnum::class.java, HumanEnumSerializer.INSTANCE)
     }
-
 }
 
 class BSPrettyPrinter : DefaultPrettyPrinter() {
@@ -88,7 +87,6 @@ class FloatSerializer : StdSerializer<Float>(Float::class.java) {
             gen.writeNumber(value)
         }
     }
-
 }
 
 class HumanEnumSerializer : StdSerializer<HumanEnum<*>>(HumanEnum::class.java) {
@@ -99,5 +97,4 @@ class HumanEnumSerializer : StdSerializer<HumanEnum<*>>(HumanEnum::class.java) {
     override fun serialize(value: HumanEnum<*>, gen: JsonGenerator, provider: SerializerProvider) {
         gen.writeString(value.enumName())
     }
-
 }
