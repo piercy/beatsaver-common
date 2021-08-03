@@ -89,6 +89,7 @@ data class BeatmapDao(val key: EntityID<Int>) : IntEntity(key) {
     val automapper: Boolean by Beatmap.automapper
     val plays: Int by Beatmap.plays
     val downloads: Int by Beatmap.downloads
+    val deletedAt by Beatmap.deletedAt
     val curatedAt by Beatmap.curatedAt
     val curator by UserDao optionalReferencedOn Beatmap.curator
 
@@ -213,7 +214,7 @@ object Difficulty : IntIdTable("difficulty", "difficultyId") {
     val createdAt = timestamp("createdAt")
     val stars = decimal("stars", 4, 2).nullable()
     val requirements = array<String>("requirements", VarCharColumnType(64)).nullable()
-    val suggestions = array<String>("suggestions", VarCharColumnType(64)).nullable()
+    val suggestions = array<String>("suggestions", VarCharColumnType(255)).nullable()
     val information = array<String>("information", VarCharColumnType(255)).nullable()
     val warnings = array<String>("warnings", VarCharColumnType(255)).nullable()
 

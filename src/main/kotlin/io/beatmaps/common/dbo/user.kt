@@ -19,6 +19,7 @@ object User : IntIdTable("uploader", "id") {
     val admin = bool("admin")
     val uploadLimit = integer("uploadLimit")
     val upvotes = integer("upvotes")
+    val password = char("password", 60)
 }
 
 data class UserDao(val key: EntityID<Int>) : IntEntity(key) {
@@ -34,4 +35,5 @@ data class UserDao(val key: EntityID<Int>) : IntEntity(key) {
     val admin: Boolean by User.admin
     val uploadLimit: Int by User.uploadLimit
     val upvotes by User.upvotes
+    val password by User.password
 }
