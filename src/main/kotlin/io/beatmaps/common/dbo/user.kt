@@ -11,7 +11,6 @@ object User : IntIdTable("uploader", "id") {
     val hash = char("hash", 24).uniqueIndex("hash").nullable()
     val name = text("name")
     val avatar = text("avatar").nullable()
-    val email = text("email").uniqueIndex("email_idx").nullable()
     val steamId = long("steamId").nullable()
     val oculusId = long("oculusId").nullable()
     val discordId = long("discordId").nullable()
@@ -27,7 +26,6 @@ data class UserDao(val key: EntityID<Int>) : IntEntity(key) {
     val name: String by User.name
     val hash: String? by User.hash
     val avatar: String? by User.avatar
-    val email: String? by User.email
     val steamId: Long? by User.steamId
     val oculusId: Long? by User.oculusId
     val discordId: Long? by User.discordId
