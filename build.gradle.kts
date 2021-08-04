@@ -54,7 +54,7 @@ dependencies {
 
     implementation("org.valiktor:valiktor-core:0.12.0")
 
-    implementation("io.beatmaps:BeatMaps-CommonMP:1.0-SNAPSHOT")
+    implementation("io.beatmaps:BeatMaps-CommonMP:1.0.5")
 }
 
 tasks.withType<KotlinCompile> {
