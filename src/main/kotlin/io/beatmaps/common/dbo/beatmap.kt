@@ -43,7 +43,7 @@ object Beatmap : IntIdTable("beatmap", "mapId") {
     val songSubName = text("songSubName")
     val songAuthorName = text("songAuthorName")
     val levelAuthorName = text("levelAuthorName")
-    val uploaded = timestamp("uploaded")
+    val uploaded = timestamp("uploaded").nullable()
     val automapper = bool("automapper")
     val ai = bool("ai")
     val plays = integer("plays")
@@ -85,7 +85,7 @@ data class BeatmapDao(val key: EntityID<Int>) : IntEntity(key) {
     val songSubName: String by Beatmap.songSubName
     val songAuthorName: String by Beatmap.songAuthorName
     val levelAuthorName: String by Beatmap.levelAuthorName
-    val uploaded by Beatmap.uploaded
+    val uploaded: Instant? by Beatmap.uploaded
     val automapper: Boolean by Beatmap.automapper
     val plays: Int by Beatmap.plays
     val downloads: Int by Beatmap.downloads
